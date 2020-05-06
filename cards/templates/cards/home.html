@@ -4,7 +4,12 @@
 {% block content %}
 <div class="row" >
     <div class="col-lg-3 col-md-12">
-      <p align=center>tags</p>
+
+      <p align=center class="d-flex justify-content-between ">tags
+        <span>     
+          <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary">add tag</a>
+        </span>
+      </p>
       <hr>
 
       <div class="list-group" id="list-tab" role="tablist" >
@@ -25,46 +30,55 @@
 
     </div>
         <div class="col-lg-9 col-md-12">
-        <p align=center>cards</p>
-        <hr>
         <div class="tab-content " id="nav-tabContent">
 
             {% for tag in tags %}
 
               {% if forloop.first %}
+              
               <div class="tab-pane fade show active" id="list-{{ tag.id }}" role="tabpanel" aria-labelledby="list-{{ tag.id }}-list">
+                <p align=center class="d-flex justify-content-between ">cards
+                  <span>     
+                    <a href="{% url 'home' %}" class="btn btn-sm btn-light">edit tag "{{ tag.title }}"</a>
+                    <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary">add new card</a>
+                  </span>
+                </p>
+                <hr>
               {% else %}
                 <div class="tab-pane fade show" id="list-{{ tag.id }}" role="tabpanel" aria-labelledby="list-{{ tag.id }}-list">
+                <p align=center class="d-flex justify-content-between ">cards
+                  <span>     
+                    <a href="{% url 'home' %}" class="btn btn-sm btn-light">edit tag "{{ tag.title }}"</a>
+                    <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary">add new card</a>
+                  </span>
+                </p>
+                <hr>
               {% endif %}
               <div class="card-columns">
                 
 
                 {% for card in tag.cards.all %}
-
                 <div class="card">
-                {% if card.card_image %}
-                  <img src="{{ card.card_image.url }}" class="card-img-top" alt="...">
-                {% endif %}
+                  {% if card.card_image %}
+                    <img src="{{ card.card_image.url }}" class="card-img-top" alt="...">
+                  {% endif %}
                 
-
-
                   <div class="card-body">
-                    <h5 class="card-title">{{ card.title }}</h5>
-                    {% if card.description %}
-                    <p class="card-text text-muted">{{ card.description }}</p>
-                    {% endif %}
                     
-                      <button class="btn btn-block btn-sm btn-outline-primary" type="button" data-toggle="collapse" data-target="#collapse_{{ card.id }}" aria-expanded="false" aria-controls="collapse_{{ card.id }}">
-                        Go to
-                      </button>
+                    <button class="btn btn-block btn-light" type="button" data-toggle="collapse" data-target="#collapse_{{ card.id }}" aria-expanded="false" aria-controls="collapse_{{ card.id }}">
+                      <strong>{{ card.title }}</strong>
+                    </button>
 
-                    
+
                     <div class="collapse" id="collapse_{{ card.id }}">
-                      <br>
+                    
+
+
+                    <br>
                       <div class="btn-group btn-block" role="group">
-                        <a href="{% url 'card_detail' card.id %}" class="btn btn-sm btn-outline-primary">detail</a>
-                        <a href="{% url 'card_detail' card.id %}" class="btn btn-sm btn-outline-secondary">edit</a>
-                        <a href="{% url 'card_detail' card.id %}" class="btn btn-sm btn-outline-secondary">delete</a>
+                        <a href="{% url 'card_detail' card.id %}" class="btn btn-light">detail</a>
+                        <a href="{% url 'card_detail' card.id %}" class="btn btn-light">edit</a>
+                        <a href="{% url 'card_detail' card.id %}" class="btn btn-light">delete</a>
                       </div>
                     </div>
 
