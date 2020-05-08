@@ -1,3 +1,4 @@
+ 
 {% extends 'cards/base.html' %}
 
 
@@ -7,7 +8,7 @@
 
       <p align=center class="d-flex justify-content-between ">tags
         <span>     
-          <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary">add tag</a>
+          <a href="{% url 'add_tag' %}" class="btn btn-sm btn-success">add new tag</a>
         </span>
       </p>
       <hr>
@@ -15,12 +16,12 @@
       <div class="list-group" id="list-tab" role="tablist" >
       {% for tag in tags %}
         {% if forloop.first %}
-          <a class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center" id="list-{{ tag.id }}-list" data-toggle="list" href="#list-{{ tag.id }}" role="tab" aria-controls="{{ tag.id }}">{{ tag.title }}
+          <a class="list-group-item list-group-item-light list-group-item-action active d-flex justify-content-between align-items-center" id="list-{{ tag.id }}-list" data-toggle="list" href="#list-{{ tag.id }}" role="tab" aria-controls="{{ tag.id }}">{{ tag.title }}
 
           <span><strong>{{ tag.cards.count }}</strong></span>
           </a>
           {% else %}
-          <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" id="list-{{ tag.id }}-list" data-toggle="list" href="#list-{{ tag.id }}" role="tab" aria-controls="{{ tag.id }}">{{ tag.title }}
+          <a class="list-group-item list-group-item-light list-group-item-action d-flex justify-content-between align-items-center" id="list-{{ tag.id }}-list" data-toggle="list" href="#list-{{ tag.id }}" role="tab" aria-controls="{{ tag.id }}">{{ tag.title }}
           <span><strong>{{ tag.cards.count }}</strong></span>
           </a>
         {% endif %}
@@ -37,51 +38,53 @@
               {% if forloop.first %}
               
               <div class="tab-pane fade show active" id="list-{{ tag.id }}" role="tabpanel" aria-labelledby="list-{{ tag.id }}-list">
-                <p align=center class="d-flex justify-content-between ">cards
-                  <span>     
-                    <a href="{% url 'home' %}" class="btn btn-sm btn-light">edit tag "{{ tag.title }}"</a>
-                    <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary">add new card</a>
+                
+                <p align=center class="d-flex justify-content-between ">
+                  <a href="{% url 'tag_edit' tag.id %}" class="btn btn-sm btn-light">edit active tag</a>
+                  cards
+                  <span>
+                    <a href="{% url 'add_card' tag.id %}" class="btn btn-sm btn-success">add new card</a>
                   </span>
                 </p>
+
                 <hr>
               {% else %}
-                <div class="tab-pane fade show" id="list-{{ tag.id }}" role="tabpanel" aria-labelledby="list-{{ tag.id }}-list">
-                <p align=center class="d-flex justify-content-between ">cards
-                  <span>     
-                    <a href="{% url 'home' %}" class="btn btn-sm btn-light">edit tag "{{ tag.title }}"</a>
-                    <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary">add new card</a>
+              
+              <div class="tab-pane fade show" id="list-{{ tag.id }}" role="tabpanel" aria-labelledby="list-{{ tag.id }}-list">
+                
+                <p align=center class="d-flex justify-content-between ">
+                  <a href="{% url 'tag_edit' tag.id %}" class="btn btn-sm btn-light">edit active tag</a>
+                  cards
+                  <span>
+                    <a href="{% url 'home' %}" class="btn btn-sm btn-success">add new card</a>
                   </span>
                 </p>
+
                 <hr>
               {% endif %}
               <div class="card-columns">
                 
 
                 {% for card in tag.cards.all %}
+
                 <div class="card">
                   {% if card.card_image %}
                     <img src="{{ card.card_image.url }}" class="card-img-top" alt="...">
                   {% endif %}
-                
+
                   <div class="card-body">
-                    
-                    <button class="btn btn-block btn-light" type="button" data-toggle="collapse" data-target="#collapse_{{ card.id }}" aria-expanded="false" aria-controls="collapse_{{ card.id }}">
-                      <strong>{{ card.title }}</strong>
+                    <h5 class="card-title">{{ card.title }}</h5>
+                    <button class="btn btn-light btn-sm button_color" type="button" data-toggle="collapse" data-target="#collapse_{{ card.id }}" aria-expanded="false" aria-controls="collapse_{{ card.id }}">
+                      show more
                     </button>
-
-
                     <div class="collapse" id="collapse_{{ card.id }}">
-                    
-
-
                     <br>
                       <div class="btn-group btn-block" role="group">
-                        <a href="{% url 'card_detail' card.id %}" class="btn btn-light">detail</a>
-                        <a href="{% url 'card_detail' card.id %}" class="btn btn-light">edit</a>
-                        <a href="{% url 'card_detail' card.id %}" class="btn btn-light">delete</a>
+                        <a href="{% url 'card_detail' card.id %}" class="btn btn-light btn-sm button_color">todo list</a>
+                        <a href="{% url 'card_detail' card.id %}" class="btn btn-light btn-sm button_color">edit</a>
+                        <a href="{% url 'card_detail' card.id %}" class="btn btn-light btn-sm button_color">delete</a>
                       </div>
                     </div>
-
                   </div>
                 </div>
                 {% endfor %}
