@@ -13,7 +13,7 @@ def home(request):
     return render(request, 'cards/home.html', context)
 """
 def home(request):
-    tags = Tag.objects.all()
+    tags = Tag.objects.all().filter(user=request.user)
     context = {"tags": tags}
     return render(request, "cards/home.html", context)
 
@@ -31,7 +31,6 @@ def add_tag(request):
 
 def tag_edit(request, pk):
     tag = Tag.objects.get(id=pk)
-    
     if request.method == "POST":
         form = ModelTagForm(request.POST, instance=tag)
         if form.is_valid():
@@ -53,6 +52,59 @@ def tag_delete(request, pk):
 
     return render(request, 'cards/tag_delete.html', {'tag': tag})
 
+def add_card(request, pk):
+    tag = Tag.objects.get(id=pk)
+
+    if request.method == "POST":
+        form = ModelCardForm(request.POST, request.FILES)
+        if form.is_valid():
+            card = form.save(commit=False)
+            card.tag = tag
+            form.save()
+            return redirect('home')
+    else:
+        form = ModelCardForm(initial={"tag": tag})
+    return render(request, 'cards/add_card.html', {'form': form})
+
+def edit_card(request, pk):
+    card = Card.objects.get(id=pk)
+    if request.method == "POST":
+        form = ModelCardForm(request.POST, request.FILES, instance=card)
+        if form.is_valid():
+            card = form.save(commit=False)
+            card.save()
+            return redirect('home')
+    else:
+        form = ModelCardForm(instance=card)
+    return render(request, 'cards/edit_card.html', {'form': form, 'card': card})
+
+
+def add_task(request, pk):
+    author = request.user
+    project = Project.objects.get(id=pk)
+    if request.method == "POST":
+        form = ModelTaskForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            task = Task()
+            task.name = data["name"]
+            task.description = data["description"]
+            task.created_date = timezone.now()
+            task.status = data["status"]
+            task.priority = data["priority"]
+            task.user_name = request.user
+            project = Project()
+            task.project = Project.objects.get(id=pk)
+            task.save()
+            messages.success(request, "Добавлена задача '%s'" %task.name)
+            return redirect("/project/%d/task_list/" %task.project.id)
+    else:
+        form = ModelTaskForm(initial={"user_name": author, "priority": "5"})
+    return render(request, "projects/add_task.html", {"form": form, "project": project})
+
+
+edit_card
+
 
 def card_detail(request, pk):
     card = Card.objects.get(id=pk)
@@ -72,7 +124,3 @@ def task_detail(request, pk):
     task = Task.objects.get(id=pk)
     context = {'task': task}
     return render(request, 'cards/task_detail.html', context)
-
-def add_card(request, pk):
-    return render(request, 'cards/home.html')
-

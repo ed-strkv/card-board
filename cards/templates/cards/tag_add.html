@@ -3,21 +3,18 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-md-4">
+  <div class="col-md-3">
 	<form class="form" method="POST">
 		{% csrf_token %}
-		<p>
-			<label for="id_title">Tag title:</label>
-			<input class="form-control" type="text" name="title" maxlength="200" id="id_title">
-		</p>
+	      <p class="d-flex justify-content-between text-muted" style="font-size: 22px">Add tag</p>
+	      <hr>
+	    <input class="form-control" type="text" name="title" maxlength="200" id="id_title">
+	    <br>
 		<div class="btn-group btn-block" role="group" aria-label="Basic example">
-			<button class="btn btn-sm btn-secondary" type="submit">Add</button>
-			<a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary">Back</a>
+			<button class="btn btn-secondary" type="submit">Add</button>
+			<a href="{% url 'home' %}" class="btn btn-outline-secondary">Back</a>
 		</div>	
 	</form>
 	</div>
 </div>
 {% endblock %}
-
-
-

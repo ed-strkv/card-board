@@ -9,4 +9,4 @@ class ModelTagForm(forms.ModelForm):
 class ModelCardForm(forms.ModelForm):
 	class Meta:
 		model = Card
-		fields = '__all__'
+		exclude = ["tag"]
