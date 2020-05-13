@@ -10,3 +10,8 @@ class ModelCardForm(forms.ModelForm):
 	class Meta:
 		model = Card
 		exclude = ["tag"]
+
+class ModelTaskForm(forms.ModelForm):
+	class Meta:
+		model = Task
+		exclude = ["status", "card"]

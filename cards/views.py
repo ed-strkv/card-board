@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .models import Tag, Card, Task
-from .forms import ModelTagForm, ModelCardForm
+from .forms import ModelTagForm, ModelCardForm, ModelTaskForm
 from django.contrib import messages
 
 """
@@ -14,6 +14,15 @@ def home(request):
 """
 def home(request):
     tags = Tag.objects.all().filter(user=request.user)
+    if request.method == "POST":
+        form = ModelTagForm(request.POST)
+        if form.is_valid():
+            tag = form.save(commit=False)
+            tag.user = request.user
+            tag.save()
+            return redirect('home')
+    else:
+        form = ModelTagForm()
     context = {"tags": tags}
     return render(request, "cards/home.html", context)
 
@@ -28,6 +37,7 @@ def add_tag(request):
     else:
         form = ModelTagForm()
     return render(request, 'cards/tag_add.html', {'form': form})
+
 
 def tag_edit(request, pk):
     tag = Tag.objects.get(id=pk)
@@ -78,49 +88,93 @@ def edit_card(request, pk):
         form = ModelCardForm(instance=card)
     return render(request, 'cards/edit_card.html', {'form': form, 'card': card})
 
-
-def add_task(request, pk):
-    author = request.user
-    project = Project.objects.get(id=pk)
+def card_delete(request, pk):
+    card = Card.objects.get(id=pk)
+    
     if request.method == "POST":
-        form = ModelTaskForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            task = Task()
-            task.name = data["name"]
-            task.description = data["description"]
-            task.created_date = timezone.now()
-            task.status = data["status"]
-            task.priority = data["priority"]
-            task.user_name = request.user
-            project = Project()
-            task.project = Project.objects.get(id=pk)
-            task.save()
-            messages.success(request, "Добавлена задача '%s'" %task.name)
-            return redirect("/project/%d/task_list/" %task.project.id)
-    else:
-        form = ModelTaskForm(initial={"user_name": author, "priority": "5"})
-    return render(request, "projects/add_task.html", {"form": form, "project": project})
+        card.delete()
+        messages.success(request, "Deleted")
+        return redirect('home')
 
-
-edit_card
+    return render(request, 'cards/card_delete.html', {'card': card})
 
 
 def card_detail(request, pk):
     card = Card.objects.get(id=pk)
-    
+    context = {}
+
     tasks_todo = Task.objects.filter(card_id=pk, status="todo")
     tasks_doing = Task.objects.filter(card_id=pk, status="doing")
     tasks_done = Task.objects.filter(card_id=pk, status="done")
+
+    all_tasks = Task.objects.filter(card_id=pk)
+
+    counter_all_tasks = int(all_tasks.count())
     
     context = {'card': card,
                'tasks_todo': tasks_todo,
                'tasks_doing': tasks_doing,
-               'tasks_done': tasks_done
+               'tasks_done': tasks_done,
               }
+
+    if counter_all_tasks >= 1:
+        counter_doing = round(int(tasks_doing.count()*100)/counter_all_tasks)
+        counter_done = round(int(tasks_done.count()*100)/counter_all_tasks)
+        counter_todo = 100 - counter_doing - counter_done
+        context['counter_doing'] = counter_doing
+        context['counter_done'] = counter_done
+        context['counter_todo'] = counter_todo
+
+
+    if request.method == "POST":
+        form = ModelTaskForm(request.POST, initial={"status": "todo", "card": card})
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.card = card
+            form.save()
+            context['form'] = form
+            return redirect('card_detail', card.id)
+    
     return render(request, 'cards/card_detail.html', context)
+
+
+
+def task_doing(request, pk):
+    task = Task.objects.get(id=pk)
+    task.status = "doing"
+    task.save()
+    return redirect('card_detail', task.card_id)
+
+def task_done(request, pk):
+    task = Task.objects.get(id=pk)
+    task.status = "done"
+    task.save()
+    return redirect('card_detail', task.card_id)
+
+
+def task_delete(request, pk):
+    task = Task.objects.get(id=pk)
+    task.delete()
+
+    return redirect('card_detail', task.card_id)
 
 def task_detail(request, pk):
     task = Task.objects.get(id=pk)
     context = {'task': task}
     return render(request, 'cards/task_detail.html', context)
+
+"""
+def task_add(request, pk):
+    card = Card.objects.get(id=pk)
+
+    if request.method == "POST":
+        form = ModelTaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.card = card
+            form.save()
+            return redirect('card_detail', card.id)
+    else:
+        form = ModelTaskForm(initial={"status": "todo", "card": card})
+    return render(request, 'cards/add_task.html', {'form': form})
+"""
