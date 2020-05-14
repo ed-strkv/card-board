@@ -83,7 +83,7 @@ def edit_card(request, pk):
         if form.is_valid():
             card = form.save(commit=False)
             card.save()
-            return redirect('home')
+            return redirect('card_detail', card.id)
     else:
         form = ModelCardForm(instance=card)
     return render(request, 'cards/edit_card.html', {'form': form, 'card': card})
@@ -115,6 +115,7 @@ def card_detail(request, pk):
                'tasks_todo': tasks_todo,
                'tasks_doing': tasks_doing,
                'tasks_done': tasks_done,
+               'all_tasks': all_tasks,
               }
 
     if counter_all_tasks >= 1:
@@ -178,3 +179,17 @@ def task_add(request, pk):
         form = ModelTaskForm(initial={"status": "todo", "card": card})
     return render(request, 'cards/add_task.html', {'form': form})
 """
+
+def edit_task(request, pk):
+    task = Task.objects.get(id=pk)
+    
+    print(task.card.id)
+    if request.method == "POST":
+        form = ModelTaskForm(request.POST, instance=task)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.save()
+            return redirect('card_detail', task.card.id)
+    else:
+        form = ModelTaskForm(instance=task)
+    return render(request, 'cards/edit_task.html', {'form': form, 'task': task})

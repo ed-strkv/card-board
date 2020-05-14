@@ -3,18 +3,16 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-md-4">
   <form class="form" method="POST">
     {% csrf_token %}
-      <p class="d-flex justify-content-between text-muted" style="font-size: 22px">Edit tag</p>
-      <hr>
+    <h4>Tag edit</h4>
+    <hr>
     <input class="form-control" type="text" name="title" value="{{ tag.title }}" maxlength="200" id="id_title">
     <br>
-    <div class="btn-group btn-block" role="group" aria-label="Basic example">
       <button class="btn btn-secondary" type="submit">Edit</button>
-      <a href="{% url 'home' %}" class="btn btn-outline-secondary">Back</a>
-      <a href="{% url 'tag_delete' tag.id %}" class="btn btn-outline-secondary">Delete</a>
-    </div>  
+      <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
+      <a href="{% url 'tag_delete' tag.id %}" class="btn btn-secondary">Delete</a>
   </form>
   </div>
 </div>

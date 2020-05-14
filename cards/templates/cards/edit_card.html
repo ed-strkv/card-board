@@ -5,7 +5,7 @@
 
   <form class="form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <h4>Card edit:</h4>
+    <h4>Card edit</h4>
     <hr>
     <div class="row">
       <div class="col-7">
@@ -21,8 +21,8 @@
           <textarea name="description" cols="20" rows="5" maxlength="500" id="id_description" class="form-control" aria-label="With textarea" placeholder="Enter card description" >{{ card.description }}</textarea>
         </div>
       <br>
-      <button class="btn btn-warning" type="submit">Confirm</button>
-      <a class="btn btn-secondary" href="{% url 'home' %}">Back</a>
+      <button class="btn btn-secondary" type="submit">Confirm</button>
+      <a class="btn btn-secondary" href="{% url 'card_detail' card.id %}">Back</a>
 
       </div>
       <div class="col">

@@ -2,6 +2,8 @@
 
 
 {% block content %}
+<h4>Card detail</h4>
+<hr>
 <div class="row">
 
   <div class="col-3">
@@ -10,7 +12,7 @@
       <div class="input-group mb-3">
         <input type="text" class="form-control" placeholder="Add new task" name="title" maxlength="200" id="id_title">
         <div class="input-group-append">
-          <button class="btn btn-warning" type="submit">+</button>
+          <button class="btn btn-secondary" type="submit">+</button>
         </div>
       </div>
     </form>
@@ -22,17 +24,17 @@
           <h5 class="card-title">{{ card.title }}</h5>
           {% if card.description %}
           <p class="card-text text-muted">{{ card.description }}</p>
+          {% endif %}
+          {% if all_tasks %}
           <div class="progress" style="height: 8px;">
             <div class="progress-bar bg-success" role="progressbar" style="width: {{ counter_done  }}%" aria-valuenow="{{ counter_done }}" aria-valuemin="0" aria-valuemax="100"></div>
             <div class="progress-bar bg-warning" role="progressbar" style="width: {{ counter_doing }}%" aria-valuenow="{{ counter_doing }}" aria-valuemin="0" aria-valuemax="100"></div>
             <div class="progress-bar bg-danger" role="progressbar" style="width: {{ counter_todo  }}%" aria-valuenow="{{ counter_todo }}" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
           <br>
-          <div class="btn-group btn-block" role="group" aria-label="Button group with nested dropdown">
+          {% endif %}
             <a href="{% url 'edit_card' card.id %}" class="btn btn-light button_color">edit</a>
             <a href="{% url 'card_delete' card.id %}" class="btn btn-light button_color">delete</a>
-          </div>
-          {% endif %}
         </div>
       </div>
   </div>
@@ -59,11 +61,10 @@
               </div>
               <div class="modal-body">
 
-              <div class="btn-group btn-block" role="group" aria-label="Button group with nested dropdown">
-                <a href="{% url 'task_doing' task.id %}" class="btn btn-light button_color">doing</a>
-                <a href="" class="btn btn-light button_color">edit</a>
-                <a href="{% url 'task_delete' task.id %}" class="btn btn-light button_color">delete</a>
-              </div>
+                <a href="{% url 'task_doing' task.id %}" class="btn btn-warning">doing</a>
+                <a href="{% url 'task_done' task.id %}" class="btn btn-success">done</a>
+                <a href="{% url 'edit_task' task.id %}" class="btn btn-secondary">edit</a>
+                <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">delete</a>
 
               </div>
             </div>
@@ -95,11 +96,9 @@
               </div>
               <div class="modal-body">
                 
-              <div class="btn-group btn-block" role="group" aria-label="Button group with nested dropdown">
-                <a href="{% url 'task_done' task.id %}" class="btn btn-light button_color">done</a>
-                <a href="" class="btn btn-light button_color">edit</a>
-                <a href="{% url 'task_delete' task.id %}" class="btn btn-light button_color">delete</a>
-              </div>
+                <a href="{% url 'task_done' task.id %}" class="btn btn-success">done</a>
+                <a href="{% url 'edit_task' task.id %}" class="btn btn-secondary">edit</a>
+                <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">delete</a>
 
               </div>
             </div>
@@ -130,10 +129,8 @@
               </div>
               <div class="modal-body">
                 
-              <div class="btn-group btn-block" role="group" aria-label="Button group with nested dropdown">
-                <a href="" class="btn btn-light button_color">edit</a>
-                <a href="{% url 'task_delete' task.id %}" class="btn btn-light button_color">delete</a>
-              </div>
+                <a href="{% url 'edit_task' task.id %}" class="btn btn-secondary">edit</a>
+                <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">delete</a>
 
               </div>
             </div>

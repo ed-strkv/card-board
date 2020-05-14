@@ -6,19 +6,25 @@
 <div class="row" >
     <div class="col-lg-3 col-md-12">
       {% if not tags %}
-      <p align="justify" class="mb-3"style="font-size: 27px;">watch this slideshow to learn how to use this service or add your first tag</p>
-      
+        <h6 class="text-center">add tag or watch 'how to use' slides</h6>
+        <hr>
+      {% else %}
+        <h5 class="text-center">tags</h5>
+        <hr>
       {% endif %}
       <form class="form" method="POST">
         {% csrf_token %}
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Enter tag name here" name="title" maxlength="200" id="id_title">
+          {% if not tags %}
+          <input type="text" class="form-control" placeholder="for example 'my goals'" name="title" maxlength="200" id="id_title">
+          {% else %}
+          <input type="text" class="form-control" placeholder="enter new tag name" name="title" maxlength="200" id="id_title">
+          {% endif %}
           <div class="input-group-append">
-            <button class="btn btn-warning" type="submit">+</button>
+            <button class="btn btn-secondary" type="submit">+</button>
           </div>
         </div>
       </form>
-
       <div class="list-group" id="list-tab" role="tablist" >
       {% for tag in tags %}
         {% if forloop.first %}
@@ -33,13 +39,17 @@
         {% endif %}
 
       {% endfor %}
+
       </div>
-      <br>
+
     </div>
     <div class="col-lg-9 col-md-12">
+
         {% if tags %}
 
         <div class="tab-content " id="nav-tabContent">
+            <h6 class="text-center">cards</h6>
+            <hr>
             {% for tag in tags %}
 
               {% if forloop.first %}
@@ -47,8 +57,8 @@
 
               <div class="mb-3">
                 <div>
-                  <a href="{% url 'tag_edit' tag.id %}" class="btn btn-secondary">{{ tag.title }}</a>
-                  <a href="{% url 'add_card' tag.id %}" class="btn btn-warning">+ card</a>
+                  <a href="{% url 'tag_edit' tag.id %}" class="btn btn-light">{{ tag.title }}</a>
+                  <a href="{% url 'add_card' tag.id %}" class="btn btn-secondary">+ card</a>
                 </div>
               </div>
 
@@ -57,13 +67,13 @@
 
               <div class="mb-3">
                 <div>
-                  <a href="{% url 'tag_edit' tag.id %}" class="btn btn-secondary">{{ tag.title }}</a>
-                  <a href="{% url 'add_card' tag.id %}" class="btn btn-warning">+ card</a>
+                  <a href="{% url 'tag_edit' tag.id %}" class="btn btn-light">{{ tag.title }}</a>
+                  <a href="{% url 'add_card' tag.id %}" class="btn btn-secondary">+ card</a>
                 </div>
               </div>
 
               {% endif %}
-              
+
               <div class="card-columns">
                 
                 {% for card in tag.cards.all %}
@@ -75,8 +85,10 @@
                   {% endif %}
 
                   <div class="card-body">
-                    <h5 class="card-title">{{ card.title }}</h5>
-                    <a href="{% url 'card_detail' card.id %}" class="btn btn-light button_color">show more</a>
+                    <!--<h5 class="card-title">{{ card.title }}</h5>-->
+                    <a href="{% url 'card_detail' card.id %}" class="btn btn-lg btn-block btn-light">
+                      {{ card.title }}
+                    </a>
 
                   </div>
                 </div>
@@ -88,6 +100,9 @@
           </div>
         </div>
         {% else %}
+        <h6 class="text-center">how to use</h6>
+        <hr>
+    <div class="card">
     <div class="container-fluid p-0">
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
@@ -97,10 +112,10 @@
     </ol>
     <div class="carousel-inner r-10" style="border-radius: 5px;">
       <div class="carousel-item active">
-      <img src="{% static 'images/pic1.jpg' %}" class="d-block w-100" alt="..." >
+      <img src="{% static 'images/back.png' %}" class="d-block w-100" alt="..." >
       </div>
       <div class="carousel-item">
-      <img src="{% static 'images/pic2.jpg' %}" class="d-block w-100" alt="...">
+      <img src="{% static 'images/pic2.png' %}" class="d-block w-100" alt="...">
       </div>
 
     </div>
@@ -114,6 +129,7 @@
     </a>
     </div>  
     </div>
+  </div>
         {% endif %}
     </div>
 

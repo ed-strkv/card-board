@@ -1,3 +1,4 @@
+
 {% extends 'cards/base.html' %}
 
 
@@ -5,13 +6,14 @@
 
 <div class="row">
   <div class="col-md-4">
+  	<h4>Tag delete</h4>
+	<hr>
 	<form class="form" method="POST">
 		{% csrf_token %}
-		<h1>Detele tag "{{ tag.title }}"?</h1>
-		<div class="btn-group btn-block" role="group" aria-label="Basic example">
-			<button class="btn btn-sm btn-secondary" type="submit">Delete</button>
-			<a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary">Back</a>
-		</div>	
+		<p>do you really want to delete the "<strong>{{ tag.title }}</strong>" tag?</p>
+		<button class="btn btn-danger " type="submit">yeah, sure</button>
+		<a href="{% url 'home' %}" class="btn btn-success">no, go back</a>
+
 	</form>
 	</div>
 </div>
