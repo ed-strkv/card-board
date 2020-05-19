@@ -1,18 +1,17 @@
 {% extends 'cards/base.html' %}
 
+{% block tag_title %}todo list{% endblock %}
 
 {% block content %}
-<h4>Card detail</h4>
-<hr>
 <div class="row">
-
-  <div class="col-3">
+  <div class="col-lg-3 col-sm-12">
+    
     <form class="form" method="POST">
       {% csrf_token %}
       <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Add new task" name="title" maxlength="200" id="id_title">
+        <input type="text" class="form-control" placeholder="task name" name="title" maxlength="200" id="id_title">
         <div class="input-group-append">
-          <button class="btn btn-secondary" type="submit">+</button>
+          <button class="btn btn-secondary" type="submit"><i class="fas fa-plus"></i></button>
         </div>
       </div>
     </form>
@@ -25,27 +24,48 @@
           {% if card.description %}
           <p class="card-text text-muted">{{ card.description }}</p>
           {% endif %}
-          {% if all_tasks %}
-          <div class="progress" style="height: 8px;">
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{ counter_done  }}%" aria-valuenow="{{ counter_done }}" aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ counter_doing }}%" aria-valuenow="{{ counter_doing }}" aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ counter_todo  }}%" aria-valuenow="{{ counter_todo }}" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <br>
-          {% endif %}
-            <a href="{% url 'edit_card' card.id %}" class="btn btn-light button_color">edit</a>
-            <a href="{% url 'card_delete' card.id %}" class="btn btn-light button_color">delete</a>
         </div>
       </div>
+      {% if all_tasks %}
+      <br>
+      <div class="progress" style="height: 8px;">
+        <div class="progress-bar bg-success" role="progressbar" style="width: {{ counter_done  }}%" aria-valuenow="{{ counter_done }}" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ counter_doing }}%" aria-valuenow="{{ counter_doing }}" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-danger" role="progressbar" style="width: {{ counter_todo  }}%" aria-valuenow="{{ counter_todo }}" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      {% endif %}
+      <br>
+      <div class="btn-group btn-block" role="group" aria-label="Basic example">
+        <a href="{% url 'home' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i></a>
+        <a href="{% url 'card_edit' card.id %}" class="btn btn-light"><i class="fas fa-pencil-alt"></i></a>
+      </div>
+      <br>
+      <br>
+      {% if messages %}
+      <div class = "alert alert-info alert-dismissible fade show" role="alert">
+         {% for message in messages %}
+            {{ message }}
+         {% endfor %}
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endif %}
+      <br>
+      <br>
   </div>
-<div class="col-3">
-  <a href="#" class="btn btn-danger mb-3 btn-block disabled" tabindex="-1" role="button" aria-disabled="true">To Do</a>
+
+<div class="col-lg-3 col-sm-12">
+  <a href="#" class="btn btn-danger mb-3 btn-block disabled" tabindex="-1" role="button" aria-disabled="true"><i class="far fa-circle"></i> todo</a>
+    {% if not all_tasks %}
+    <p align="center">... add some tasks</p>
+    {% endif %}
 
     {% for task in tasks_todo %}
-      <h2 class="mb-1">
+      <div class="mb-1">
         <div class="list-group">
           <a class="list-group-item list-group-item-action" type="button"
-          style="font-size: 14px;" data-toggle="modal" data-target="#exampleModal{{ task.id }}">
+           data-toggle="modal" data-target="#exampleModal{{ task.id }}">
             {{ task.title }}
           </a>
         </div>
@@ -61,26 +81,34 @@
               </div>
               <div class="modal-body">
 
-                <a href="{% url 'task_doing' task.id %}" class="btn btn-warning">doing</a>
-                <a href="{% url 'task_done' task.id %}" class="btn btn-success">done</a>
-                <a href="{% url 'edit_task' task.id %}" class="btn btn-secondary">edit</a>
-                <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">delete</a>
+                
+                <div class="btn-group btn-block" role="group" aria-label="Basic example">
+                  <a href="{% url 'task_doing' task.id %}" class="btn btn-warning">
+                    <i class="fas fa-adjust"></i>
+                  </a>
+                  <a href="{% url 'task_done' task.id %}" class="btn btn-success">
+                    <i class="fas fa-circle"></i>
+                  </a>
+                  <a href="{% url 'task_edit' task.id %}" class="btn btn-secondary"><i class="fas fa-pencil-alt"></i></a>
+                  <a href="{% url 'task_delete' task.id %}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                </div>
 
               </div>
             </div>
           </div>
         </div>
-      </h2>
+      </div>
     {% endfor %}
+    <br>
   </div>
-<div class="col-3">
-  <a href="#" class="btn btn-warning mb-3 btn-block disabled" tabindex="-1" role="button" aria-disabled="true">Doing</a>
+<div class="col-lg-3 col-sm-12">
+  <a href="#" class="btn btn-warning mb-3 btn-block disabled" tabindex="-1" role="button" aria-disabled="true"><i class="fas fa-adjust"></i> doing</a>
 
     {% for task in tasks_doing %}
-      <h2 class="mb-1">
+      <div class="mb-1">
         <div class="list-group">
           <a class="list-group-item list-group-item-action" type="button"
-          style="font-size: 14px;" data-toggle="modal" data-target="#exampleModal{{ task.id }}">
+          data-toggle="modal" data-target="#exampleModal{{ task.id }}">
             {{ task.title }}
           </a>
         </div>
@@ -95,25 +123,30 @@
                 </button>
               </div>
               <div class="modal-body">
-                
-                <a href="{% url 'task_done' task.id %}" class="btn btn-success">done</a>
-                <a href="{% url 'edit_task' task.id %}" class="btn btn-secondary">edit</a>
-                <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">delete</a>
+
+                <div class="btn-group btn-block" role="group" aria-label="Basic example">
+                  <a href="{% url 'task_done' task.id %}" class="btn btn-success">
+                    <i class="fas fa-circle"></i>
+                  </a>
+                  <a href="{% url 'task_edit' task.id %}" class="btn btn-secondary"><i class="fas fa-pencil-alt"></i></a>
+                  <a href="{% url 'task_delete' task.id %}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                </div>
 
               </div>
             </div>
           </div>
         </div>
-      </h2>
+      </div>
     {% endfor %}
+    <br>
   </div>
-<div class="col-3">
-  <a href="#" class="btn btn-success mb-3 btn-block disabled" tabindex="-1" role="button" aria-disabled="true">Done</a>
+<div class="col-lg-3 col-sm-12">
+  <a href="#" class="btn btn-success mb-3 btn-block disabled" tabindex="-1" role="button" aria-disabled="true"><i class="fas fa-circle"></i> done</a>
       {% for task in tasks_done %}
-      <h2 class="mb-1">
+      <div class="mb-1">
         <div class="list-group">
           <a class="list-group-item list-group-item-action" type="button"
-          style="font-size: 14px;" data-toggle="modal" data-target="#exampleModal{{ task.id }}">
+          data-toggle="modal" data-target="#exampleModal{{ task.id }}">
             {{ task.title }}
           </a>
         </div>
@@ -129,15 +162,18 @@
               </div>
               <div class="modal-body">
                 
-                <a href="{% url 'edit_task' task.id %}" class="btn btn-secondary">edit</a>
-                <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">delete</a>
+                <div class="btn-group btn-block" role="group" aria-label="Basic example">
+                  <a href="{% url 'task_edit' task.id %}" class="btn btn-secondary"><i class="fas fa-pencil-alt"></i></a>
+                  <a href="{% url 'task_delete' task.id %}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                </div>
 
               </div>
             </div>
           </div>
         </div>
-      </h2>
+      </div>
     {% endfor %}
+    <br>
   </div>
 </div>
 

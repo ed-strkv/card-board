@@ -1,33 +1,32 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
-  <a class="navbar-brand" href="{% url 'home' %}">CardBoard</a>
+  <a class="navbar-brand" href="{% url 'home' %}"><i class="fas fa-clone"></i> CVRDS</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+  {% if user.is_authenticated %}
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav">
+      {% if request.user.is_staff %}
+      {% endif %}
+      <span class="navbar-text active">
+        <i class="fas fa-cat"></i> hello, {{ request.user }}!
+      </span>
+    </ul>
+    <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'home' %}">Main</a>
+        <a class="nav-link" href="https://t.me/ed_strkv"><i class="fas fa-comment-alt"></i> Feedback</a>
       </li>
-      <li class="nav-item dropdown">
-
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Account
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Edit</a>
-          <a class="dropdown-item" href="#">Logout</a>
-        </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          FeedBack
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">telegram</a>
-          <a class="dropdown-item" href="#">instagram</a>
-          <a class="dropdown-item" href="#">twitter</a>
-        </div>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout_user' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
       </li>
     </ul>
   </div>
+  {% endif %}
 </nav>
+<style>
+  .hello-msg{
+    font-size: 16px;
+    color: #fff;
+    margin-right: 20px;
+  }
+</style>

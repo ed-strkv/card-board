@@ -1,19 +1,21 @@
+
 {% extends 'cards/base.html' %}
 
+{% block tag_title %}card delete{% endblock %}
 
 {% block content %}
-
 <div class="row">
-  <div class="col-md-4">
-  	<h4>Card delete</h4>
-	<hr>
-	<form class="form" method="POST">
-		{% csrf_token %}
-		<p>do you really want to delete the "<strong>{{ card.title }}</strong>" card?</p>
-		<button class="btn btn-danger " type="submit">yeah, sure</button>
-		<a href="{% url 'card_detail' card.id %}" class="btn btn-success">no, go back</a>
-
-	</form>
-	</div>
+  <div class="col-lg-4 col-sm-12">
+  <form class="form" method="POST">
+    {% csrf_token %}
+    <h2 class="text-center">card delete</h2>
+    <hr>
+    <p>do you really want to delete the "<strong>{{ card.title }}</strong>" card?</p>
+    <div class="btn-group btn-block" role="group" aria-label="Basic example">
+      <a href="{% url 'card_edit' card.id %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i></a>
+      <button class="btn btn-danger" type="submit"><i class="fas fa-trash"></i></button>
+    </div>
+  </form>
+  </div>
 </div>
 {% endblock %}
