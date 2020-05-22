@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .models import Tag, Card, Task
-from .forms import ModelTagForm, ModelCardForm, ModelTaskForm, CreateUserForm
+from .forms import ModelTagForm, ModelCardAddForm, ModelCardEditForm, ModelTaskForm, CreateUserForm
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
@@ -66,7 +66,10 @@ def home(request):
 @login_required
 def tag_edit(request, pk):
     tag = get_object_or_404(Tag, pk=pk)
-    #tag = Tag.objects.get_object_or_404(id=pk)
+
+    cards = Card.objects.filter(tag__id=pk)
+    print(cards)
+
     if request.method == "POST":
         form = ModelTagForm(request.POST, instance=tag)
         if form.is_valid():
@@ -82,7 +85,12 @@ def tag_edit(request, pk):
 @login_required
 def tag_delete(request, pk):
     tag = get_object_or_404(Tag, pk=pk)
+    cards = Card.objects.filter(tag__id=pk)
+
     if request.method == "POST":
+        for card in cards:
+            card.card_image.delete()
+
         tag.delete()
         messages.success(request, "tag '%s' has been deleted" %tag.title)
         return redirect('home')
@@ -93,7 +101,7 @@ def tag_delete(request, pk):
 def add_card(request, pk):
     tag = get_object_or_404(Tag, pk=pk)
     if request.method == "POST":
-        form = ModelCardForm(request.POST, request.FILES)
+        form = ModelCardAddForm(request.POST, request.FILES)
         if form.is_valid():
             card = form.save(commit=False)
             card.tag = tag
@@ -102,22 +110,29 @@ def add_card(request, pk):
             messages.success(request, "card '%s' has been added" %card.title)
             return redirect('home')
     else:
-        form = ModelCardForm(initial={"tag": tag})
+        form = ModelCardAddForm(initial={"tag": tag})
     return render(request, 'cards/add_card.html', {'form': form})
+
+
 
 @login_required
 def card_edit(request, pk):
     card = get_object_or_404(Card, pk=pk)
+    card_tag = card.tag
+    all_tags = Tag.objects.all()
+
     if request.method == "POST":
-        form = ModelCardForm(request.POST, request.FILES, instance=card)
+        form = ModelCardEditForm(request.POST, request.FILES, instance=card)
         if form.is_valid():
             card = form.save(commit=False)
             card.save()
             messages.success(request, "card '%s' has been changed" %card.title)
             return redirect('card_detail', card.id)
     else:
-        form = ModelCardForm(instance=card)
-    return render(request, 'cards/card_edit.html', {'form': form, 'card': card})
+        form = ModelCardEditForm(instance=card)
+    return render(request, 'cards/card_edit.html', {'form': form, 'card': card, 'card_tag': card_tag, 'all_tags': all_tags})
+
+
 
 @login_required
 def card_delete(request, pk):

@@ -15,19 +15,34 @@
         </div>
       </div>
     </form>
+
       <div class="card">
       {% if card.card_image %}
         <img src="{{ card.card_image.url }}" class="card-img-top" alt="...">
       {% endif %}
         <div class="card-body">
-          <h5 class="card-title">{{ card.title }}</h5>
+          <h5>{{ card.title }}</h5>
           {% if card.description %}
-          <p class="card-text text-muted">{{ card.description }}</p>
+            <p class="card-text text-muted">{{ card.description }}</p>
           {% endif %}
         </div>
       </div>
-      {% if all_tasks %}
+
+      {% if messages %}
       <br>
+      <div class = "alert alert-info alert-dismissible fade show" role="alert">
+         {% for message in messages %}
+            {{ message }}
+         {% endfor %}
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% else %}
+      <br>
+      {% endif %}
+      {% if all_tasks %}
+      
       <div class="progress" style="height: 8px;">
         <div class="progress-bar bg-success" role="progressbar" style="width: {{ counter_done  }}%" aria-valuenow="{{ counter_done }}" aria-valuemin="0" aria-valuemax="100"></div>
         <div class="progress-bar bg-warning" role="progressbar" style="width: {{ counter_doing }}%" aria-valuenow="{{ counter_doing }}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -39,18 +54,6 @@
         <a href="{% url 'home' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i></a>
         <a href="{% url 'card_edit' card.id %}" class="btn btn-light"><i class="fas fa-pencil-alt"></i></a>
       </div>
-      <br>
-      <br>
-      {% if messages %}
-      <div class = "alert alert-info alert-dismissible fade show" role="alert">
-         {% for message in messages %}
-            {{ message }}
-         {% endfor %}
-         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      {% endif %}
       <br>
       <br>
   </div>

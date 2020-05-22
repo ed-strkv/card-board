@@ -8,10 +8,15 @@ class ModelTagForm(forms.ModelForm):
 		model = Tag
 		fields = ["title"]
 
-class ModelCardForm(forms.ModelForm):
+class ModelCardAddForm(forms.ModelForm):
 	class Meta:
 		model = Card
-		exclude = ["tag"]
+		exclude = ['tag']
+
+class ModelCardEditForm(forms.ModelForm):
+	class Meta:
+		model = Card
+		fields = "__all__"
 
 class ModelTaskForm(forms.ModelForm):
 	class Meta:
