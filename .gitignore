@@ -1,7 +1,9 @@
+db.sqlite3
 *.pyc
 *.pyo
 *~
 .idea/
 __pycache__
 todo/
-db.sqlite3
+
+
