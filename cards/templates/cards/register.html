@@ -1,0 +1,94 @@
+{% extends 'cards/base.html' %}
+
+
+{% load static %}
+
+
+{% block tag_title %}CVRDS: sign up{% endblock %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-3 col-sm-12">
+  <h2 class="text-center">sign up</h2>
+  <hr>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="input-group mb-2">
+      <div class="input-group-append">
+        <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
+      </div>
+      <input type="text" name="username" maxlength="150" autofocus required id="id_username" class="form-control" placeholder="username">
+    </div>
+    <!--
+    <div class="input-group mb-2">
+      <div class="input-group-append">
+        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+      </div>
+      <input type="email"  maxlength="150" autofocus required id="id_email" class="form-control" placeholder="email">
+    </div>
+    -->
+    <div class="input-group mb-2">
+      <div class="input-group-append">
+        <span class="input-group-text"><i class="fas fa-key"></i></span>
+      </div>
+      <input type="password" name="password1" placeholder="password" class="form-control"autocomplete="new-password" required id="id_password1" class="form-control" id="id_password1">
+    </div>
+    <div class="input-group mb-2">
+      <div class="input-group-append">
+        <span class="input-group-text"><i class="fas fa-key"></i></span>
+      </div>
+      <input type="password" name="password2" placeholder="confirm password" class="form-control"autocomplete="new-password" required id="id_password2" class="form-control" id="id_password2">
+    </div>
+    <p>{{ form.errors }}</p>
+    <button class="btn btn-block btn-secondary" name="create user" type="submit"><i class="fas fa-user-plus"></i></button>
+  </form>
+  <br>
+  <p>Already have an account?<a href="{% url 'login_page' %}" class="ml-2">Login</a></p>
+  </div>
+  <div class="col-lg-9 col-md-12">
+    {% if tags %}
+      <div class="tab-content " id="nav-tabContent">
+        {% for tag in tags %}
+          {% if forloop.first %}
+            <div class="tab-pane fade show active" id="list-{{ tag.id }}" role="tabpanel" aria-labelledby="list-{{ tag.id }}-list">
+              <div class="mb-3">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <a href="{% url 'tag_edit' tag.id %}" class="btn btn-secondary">{{ tag.title }}</a>
+                  <a href="{% url 'add_card' tag.id %}" class="btn btn-light"><i class="fas fa-plus"></i> card</a>
+                </div>
+              </div>
+          {% else %}
+            <div class="tab-pane fade show" id="list-{{ tag.id }}" role="tabpanel" aria-labelledby="list-{{ tag.id }}-list">
+              <div class="mb-3">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <a href="{% url 'tag_edit' tag.id %}" class="btn btn-secondary">{{ tag.title }}</a>
+                  <a href="{% url 'add_card' tag.id %}" class="btn btn-light"><i class="fas fa-plus"></i> card</a>
+                </div>
+              </div>
+          {% endif %}
+            <div class="card-columns">
+              {% for card in tag.cards.all %}
+                <div class="card">
+                {% if card.card_image %}
+                  <img src="{{ card.card_image.url }}" class="card-img-top" alt="...">
+                {% endif %}
+                  <div class="card-body">
+                    <a href="{% url 'card_detail' card.id %}" class="btn btn-lg btn-block btn-light">
+                      {{ card.title }}
+                    </a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% else %}
+    <h2 class="text-center">how to use</h2>    
+    {% include 'cards/slide.html' %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

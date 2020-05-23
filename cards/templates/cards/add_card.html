@@ -1,40 +1,40 @@
 {% extends 'cards/base.html' %}
 
+
 {% block tag_title %}add card{% endblock %}
 
-{% block content %}
-  <form class="form" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
 
-    <div class="row">
-      <div class="col-lg-4 col-sm-12">
-      <h2 class="text-center">add card</h2>
-      <hr>
-        <label for="id_title">title:</label> 
-        <div class="input-group flex-nowrap">
-          <input type="text" name="title" class="form-control" placeholder="card title" aria-describedby="addon-wrapping" maxlength="200" required id="id_title">
-        </div>
-      
-        <br>
-        <label for="id_description">description:</label> 
-        <div class="input-group">
-          <textarea name="description" cols="20" rows="5" maxlength="500" id="id_description" class="form-control" aria-label="With textarea" placeholder="card description" ></textarea>
-        </div>
-        <br>
-        <label for="id_card_image">image:</label>
-        <div class="input-group">
-          <div class="custom-file">
-            <input type="file" class="custom-file-input" name="card_image" accept="image/*" id="id_card_image">
-            <label class="custom-file-label" for="id_card_image">choose card image</label>
-          </div>
-        </div>
-        <br>
-        <div class="btn-group btn-block" role="group" aria-label="Basic example">
-          <a class="btn btn-secondary" href="{% url 'home' %}"><i class="fas fa-arrow-left"></i></a>
-          <button class="btn btn-success" type="submit"><i class="fas fa-check"></i></button>
-        </div>
+{% block content %}
+<form class="form" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-lg-4 col-sm-12">
+    <h2 class="text-center">add card</h2>
+    <hr>
+    <label for="id_title">title:</label> 
+    <div class="input-group flex-nowrap">
+      <input type="text" name="title" class="form-control" placeholder="card title" aria-describedby="addon-wrapping" maxlength="200" required id="id_title">
+    </div>
+    <br>
+    <label for="id_description">description:</label> 
+    <div class="input-group">
+      <textarea name="description" cols="20" rows="5" maxlength="500" id="id_description" class="form-control" aria-label="With textarea" placeholder="card description" ></textarea>
+    </div>
+    <br>
+    <label for="id_card_image">image:</label>
+    <div class="input-group">
+      <div class="custom-file">
+        <input type="file" class="custom-file-input" name="card_image" accept="image/*" id="id_card_image">
+        <label class="custom-file-label" for="id_card_image">choose card image</label>
       </div>
     </div>
-  </form>
-  <br>
+    <br>
+      <div class="btn-group btn-block" role="group" aria-label="Basic example">
+        <a class="btn btn-secondary" href="{% url 'home' %}"><i class="fas fa-arrow-left"></i></a>
+        <button class="btn btn-success" type="submit"><i class="fas fa-check"></i></button>
+      </div>
+    </div>
+  </div>
+</form>
+<br>
 {% endblock %}

@@ -21,7 +21,6 @@ def register_page(request):
             user.groups.add(group)
             messages.success(request, 'Account was created for ' + username)
             return redirect('login_page')
-            
     context = {'form': form}
     return render(request, "cards/register.html", context)
 
@@ -31,15 +30,12 @@ def login_page(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-    
         if user is not None:
             login(request, user)
             return redirect('home')
         else:
             messages.info(request, 'username or password is incorrect')         
-
-    context = {}
-    return render(request, 'cards/login.html', context)
+    return render(request, 'cards/login.html')
 
 @login_required
 def logout_user(request):
@@ -66,10 +62,7 @@ def home(request):
 @login_required
 def tag_edit(request, pk):
     tag = get_object_or_404(Tag, pk=pk)
-
     cards = Card.objects.filter(tag__id=pk)
-    print(cards)
-
     if request.method == "POST":
         form = ModelTagForm(request.POST, instance=tag)
         if form.is_valid():
@@ -86,15 +79,12 @@ def tag_edit(request, pk):
 def tag_delete(request, pk):
     tag = get_object_or_404(Tag, pk=pk)
     cards = Card.objects.filter(tag__id=pk)
-
     if request.method == "POST":
         for card in cards:
             card.card_image.delete()
-
         tag.delete()
         messages.success(request, "tag '%s' has been deleted" %tag.title)
         return redirect('home')
-
     return render(request, 'cards/tag_delete.html', {'tag': tag})
 
 @login_required
@@ -106,7 +96,6 @@ def add_card(request, pk):
             card = form.save(commit=False)
             card.tag = tag
             form.save()
-
             messages.success(request, "card '%s' has been added" %card.title)
             return redirect('home')
     else:
@@ -120,7 +109,6 @@ def card_edit(request, pk):
     card = get_object_or_404(Card, pk=pk)
     card_tag = card.tag
     all_tags = Tag.objects.all()
-
     if request.method == "POST":
         form = ModelCardEditForm(request.POST, request.FILES, instance=card)
         if form.is_valid():
@@ -141,29 +129,23 @@ def card_delete(request, pk):
         card.delete()
         messages.success(request, "card '%s' has been deleted" %card.title)
         return redirect('home')
-
     return render(request, 'cards/card_delete.html', {'card': card})
 
 @login_required
 def card_detail(request, pk):
     card = get_object_or_404(Card, pk=pk)
     context = {}
-
     tasks_todo = Task.objects.filter(card_id=pk, status="todo")
     tasks_doing = Task.objects.filter(card_id=pk, status="doing")
     tasks_done = Task.objects.filter(card_id=pk, status="done")
-
     all_tasks = Task.objects.filter(card_id=pk)
-
     counter_all_tasks = int(all_tasks.count())
-    
     context = {'card': card,
                'tasks_todo': tasks_todo,
                'tasks_doing': tasks_doing,
                'tasks_done': tasks_done,
                'all_tasks': all_tasks,
               }
-
     if counter_all_tasks >= 1:
         counter_doing = round(int(tasks_doing.count()*100)/counter_all_tasks)
         counter_done = round(int(tasks_done.count()*100)/counter_all_tasks)
@@ -171,8 +153,6 @@ def card_detail(request, pk):
         context['counter_doing'] = counter_doing
         context['counter_done'] = counter_done
         context['counter_todo'] = counter_todo
-
-
     if request.method == "POST":
         form = ModelTaskForm(request.POST, initial={"status": "todo", "card": card})
         if form.is_valid():
@@ -182,9 +162,7 @@ def card_detail(request, pk):
             context['form'] = form
             messages.success(request, "task '%s' has been added" %task.title)
             return redirect('card_detail', card.id)
-    
     return render(request, 'cards/card_detail.html', context)
-
 
 @login_required
 def task_doing(request, pk):
@@ -209,11 +187,9 @@ def task_delete(request, pk):
     messages.success(request, "task '%s' has been deleted" %task.title)
     return redirect('card_detail', task.card_id)
 
-
 @login_required
 def task_edit(request, pk):
     task = get_object_or_404(Task, pk=pk)
-
     if request.method == "POST":
         form = ModelTaskForm(request.POST, instance=task)
         if form.is_valid():

@@ -1,0 +1,22 @@
+body { 
+	background-color: #ededed;
+	font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+.text-center {
+	font-family: 'Amatic SC', cursive;
+}
+
+.my_color { 
+	background-color: #ededed;
+}
+
+.slide_text_color {
+	color: grey;
+}
+
+.hello-msg{
+	font-size: 16px;
+	color: #fff;
+	margin-right: 20px;
+}

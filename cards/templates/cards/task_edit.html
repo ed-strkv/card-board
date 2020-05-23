@@ -1,0 +1,26 @@
+{% extends 'cards/base.html' %}
+
+
+{% block tag_title %}edit task{% endblock %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-4 col-sm-12">
+    <form class="form" method="POST">
+      {% csrf_token %}
+      <h2 class="text-center">task edit</h2>
+      <hr>
+      <label for="id_title">title:</label> 
+      <input class="form-control" type="text" name="title" value="{{ task.title }}" maxlength="200" id="id_title">
+      <br>
+      <div class="btn-group btn-block" role="group" aria-label="Basic example">
+        <a href="{% url 'card_detail' task.card.id %}" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+        <button class="btn btn-success" type="submit"><i class="fas fa-check"></i></button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
